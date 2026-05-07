@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Card Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <img src="logo.png" alt="Logo" class="logo" />
+    <div class="header-title">
+      <h1>SmartCard Status Information</h1>
+      <p>स्मार्टकार्ड प्रणाली</p>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- Search Card -->
+    <div class="card">
+      <h2>Search Your SmartCard Status</h2>
+      <p class="subtitle">Enter your full name or smartcard number to check your status.</p>
+
+      <label for="nameInput">Full Name (पूरा नाम)</label>
+      <input type="text" id="nameInput" placeholder="e.g. Ram Bahadur Thapa" />
+
+      <div class="or-divider">— OR (वा) —</div>
+
+      <label for="cardInput">SmartCard Number (स्मार्टकार्ड नम्बर)</label>
+      <input type="text" id="cardInput" placeholder="e.g. NAB279" />
+
+      <br /><br />
+
+      <button class="btn-search" id="searchBtn" onclick="searchCard()">Search (खोज्नुहोस्)</button>
+      <button class="btn-clear" onclick="clearSearch()">Clear (मेटाउनुहोस्)</button>
+
+      <!-- Error: nothing entered -->
+      <p id="errorMsg" class="msg-error">
+        ⚠ कृपया नाम वा स्मार्ट कार्ड नम्बर मध्ये कम्तिमा एउटा भर्नुहोस्।
+      </p>
+
+      <!-- Warning: only first name entered -->
+      <p id="fullNameMsg" class="msg-warning">
+        ⚠ कृपया आफ्नो पूरा नाम लेख्नुहोस् — Please enter your full name (e.g. Ram Bahadur Thapa)
+      </p>
+    </div>
+
+    <!-- Result Box (shown after search) -->
+    <div id="resultBox" class="result-box">
+      <p id="statusLabel" class="status-label"></p>
+      <p id="statusMessage" class="status-message"></p>
+
+      <!-- Details table (shown only when dispatched) -->
+      <div id="cardDetails" class="card-details">
+        <table>
+          <tr><th>Full Name / नाम</th>          <td id="detailName"></td></tr>
+          <tr><th>Card Number</th>               <td id="detailCard"></td></tr>
+          <tr><th>DC Code / केन्द्र कोड</th>    <td id="detailDcCode"></td></tr>
+          <tr><th>Centre / केन्द्र</th>          <td id="detailCentre"></td></tr>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>नेपाल सरकार &nbsp;|&nbsp; Government of Nepal</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

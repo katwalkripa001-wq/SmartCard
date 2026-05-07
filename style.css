@@ -1,0 +1,398 @@
+/* ============================================================
+   SMART CARD MANAGEMENT SYSTEM — style.css
+   ============================================================
+   SECTIONS:
+   1.  Reset & Base
+   2.  Header
+   3.  Main Layout
+   4.  Search Card
+   5.  Labels & Inputs
+   6.  OR Divider
+   7.  Buttons
+   8.  Error & Warning Messages
+   9.  Result Box
+   10. Status Colors
+   11. Details Table
+   12. Footer
+   13. Responsive (mobile)
+   ============================================================ */
+
+
+/* ============================================================
+   1. RESET & BASE
+   Removes default browser margin/padding. Sets the font and
+   background color for the whole page.
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f0f4f8;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+
+/* ============================================================
+   2. HEADER
+   Dark navy bar at the top. Logo and title sit side by side
+   using flexbox. Gold line runs along the bottom.
+   ============================================================ */
+header {
+  background-color: #0a2a6e;
+  padding: 16px 40px;
+  display: flex;           /* side by side layout */
+  align-items: center;     /* vertically centered */
+  gap: 20px;               /* space between logo and title */
+  border-bottom: 4px solid #c8922a;  /* gold line */
+}
+
+header .logo {
+  height: 50px;
+  width: auto;
+  filter: brightness(0) invert(1);  /* turns logo white */
+}
+
+.header-title h1 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.header-title p {
+  font-family: 'Hind', sans-serif;  /* Nepali text font */
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-top: 3px;
+}
+
+
+/* ============================================================
+   3. MAIN LAYOUT
+   Centers everything on the page with a max width of 580px.
+   The search card and result box stack vertically.
+   ============================================================ */
+main {
+  max-width: 580px;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+/* ============================================================
+   4. SEARCH CARD
+   White rounded box that contains the entire search form.
+   ============================================================ */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0a2a6e;
+  margin-bottom: 6px;
+}
+
+.card .subtitle {
+  font-size: 0.88rem;
+  color: #718096;
+  margin-bottom: 24px;
+}
+
+
+/* ============================================================
+   5. LABELS & INPUTS
+   Labels sit above each input. Inputs highlight blue on focus.
+   ============================================================ */
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4a5568;
+  margin-bottom: 7px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background-color: #f7fafc;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #0a2a6e;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(10, 42, 110, 0.1);
+}
+
+
+/* ============================================================
+   6. OR DIVIDER
+   The "— OR / वा —" text between the two inputs.
+   ============================================================ */
+.or-divider {
+  text-align: center;
+  color: #a0aec0;
+  font-size: 0.82rem;
+  margin: 16px 0;
+  letter-spacing: 0.05em;
+}
+
+
+/* ============================================================
+   7. BUTTONS
+   Search button = filled dark blue.
+   Clear button  = outlined/transparent.
+   ============================================================ */
+.btn-search {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  background-color: #0a2a6e;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-search:hover    { background-color: #0d3490; }
+.btn-search:active   { transform: scale(0.98); }
+.btn-search:disabled { background-color: #718096; cursor: not-allowed; }
+
+.btn-clear {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  background-color: transparent;
+  color: #4a5568;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-clear:hover {
+  background-color: #f0f4f8;
+  border-color: #a0aec0;
+}
+
+
+/* ============================================================
+   8. ERROR & WARNING MESSAGES
+   msg-error   = red  — shown when both fields are empty
+   msg-warning = amber — shown when only first name is typed
+   Both are hidden by default. JavaScript shows them.
+   ============================================================ */
+.msg-error,
+.msg-warning {
+  display: none;
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.msg-error {
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-left: 4px solid #e53e3e;
+  color: #c53030;
+}
+
+.msg-warning {
+  background-color: #fffbeb;
+  border: 1px solid #fbd38d;
+  border-left: 4px solid #d97706;
+  color: #744210;
+}
+
+
+/* ============================================================
+   9. RESULT BOX
+   Hidden by default. JavaScript shows it and adds a status
+   class (status-dispatched, status-atrvk, status-printing,
+   status-notfound) which changes its color.
+   ============================================================ */
+.result-box {
+  display: none;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  border-left: 6px solid #cbd5e0;  /* left border color changes by status */
+}
+
+.status-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+.status-message {
+  font-family: 'Hind', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.9;
+}
+
+
+/* ============================================================
+   10. STATUS COLORS
+   Each status gets a different background and border color.
+   The label and message text colors also change.
+   ============================================================ */
+
+/* DISPATCHED — green */
+.result-box.status-dispatched {
+  background-color: #f0fff4;
+  border-left-color: #38a169;
+}
+.result-box.status-dispatched .status-label   { color: #276749; }
+.result-box.status-dispatched .status-message { color: #22543d; }
+
+/* AT RVK (at vendor) — blue */
+.result-box.status-atrvk {
+  background-color: #ebf8ff;
+  border-left-color: #3182ce;
+}
+.result-box.status-atrvk .status-label   { color: #2b6cb0; }
+.result-box.status-atrvk .status-message { color: #2c5282; }
+
+/* IN PRINTING — amber */
+.result-box.status-printing {
+  background-color: #fffbeb;
+  border-left-color: #d97706;
+}
+.result-box.status-printing .status-label   { color: #b7791f; }
+.result-box.status-printing .status-message { color: #744210; }
+
+/* NOT FOUND — red */
+.result-box.status-notfound {
+  background-color: #fff5f5;
+  border-left-color: #e53e3e;
+}
+.result-box.status-notfound .status-label   { color: #c53030; }
+.result-box.status-notfound .status-message { color: #742a2a; }
+
+
+/* ============================================================
+   11. DETAILS TABLE
+   Shows name, card number, DC code and centre when a
+   dispatched record is found. Hidden by default.
+   ============================================================ */
+.card-details {
+  display: none;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card-details table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.card-details tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-details tr:last-child {
+  border-bottom: none;
+}
+
+.card-details th {
+  text-align: left;
+  padding: 9px 12px 9px 0;
+  color: #718096;
+  font-weight: 500;
+  width: 160px;
+}
+
+.card-details td {
+  padding: 9px 0;
+  color: #1a1a2e;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   12. FOOTER
+   Simple centered text at the bottom of the page.
+   ============================================================ */
+footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.82rem;
+  color: #a0aec0;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 10px;
+}
+
+
+/* ============================================================
+   13. RESPONSIVE — MOBILE
+   On screens smaller than 480px, reduce padding and font sizes
+   so the page still looks good on a phone.
+   ============================================================ */
+@media (max-width: 480px) {
+  header {
+    padding: 14px 20px;
+    gap: 12px;
+  }
+
+  header .logo {
+    height: 36px;
+  }
+
+  .header-title h1 {
+    font-size: 1rem;
+  }
+
+  main {
+    margin: 20px auto;
+  }
+
+  .card {
+    padding: 22px 18px;
+  }
+
+  .result-box {
+    padding: 20px 18px;
+  }
+
+  .card-details th {
+    width: 120px;
+  }
+}
