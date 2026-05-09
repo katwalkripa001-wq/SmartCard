@@ -1,143 +1,129 @@
 <?php
-// ============================================================
-//  SMART CARD PORTAL — search.php
-//  Reads live data directly from Google Sheets (CSV)
-//  No Excel file needed, No composer needed!
-// ============================================================
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 
-// ============================================================
-//  GOOGLE SHEETS CSV LINKS
-//  These links auto-update when you edit the Google Sheet
-// ============================================================
 $SHEET_DISPATCHED = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgKjNlzWYcEagDnxSdcRWkAZZsPYyKaJ3nx1bmzNlGQSj8mzyc8RUHtGNoiiG0c79svYzEH1ZDINyp/pub?gid=855486761&single=true&output=csv";
 $SHEET_ATRVK      = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgKjNlzWYcEagDnxSdcRWkAZZsPYyKaJ3nx1bmzNlGQSj8mzyc8RUHtGNoiiG0c79svYzEH1ZDINyp/pub?gid=1595329530&single=true&output=csv";
 $SHEET_PRINTING   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgKjNlzWYcEagDnxSdcRWkAZZsPYyKaJ3nx1bmzNlGQSj8mzyc8RUHtGNoiiG0c79svYzEH1ZDINyp/pub?gid=594840163&single=true&output=csv";
 
+// Sheet column positions (0-based index):
+// A=0 G(row no) | B=1 SC(card no) | C=2 DC Code | D=3 Centre Name | E=4 Full Name | H=7 Remarks | I=8 Status
 
-// ============================================================
-//  GET SEARCH INPUTS
-// ============================================================
-$search_name = isset($_GET["name"])        ? strtolower(trim($_GET["name"]))        : "";
-$search_card = isset($_GET["card_number"]) ? strtolower(trim($_GET["card_number"])) : "";
+$search_name   = isset($_GET["name"])        ? strtolower(trim($_GET["name"]))        : "";
+$search_centre = isset($_GET["centre"])      ? strtolower(trim($_GET["centre"]))      : "";
+$search_card   = isset($_GET["card_number"]) ? strtolower(trim($_GET["card_number"])) : "";
 
 if (empty($search_name) && empty($search_card)) {
     echo json_encode(["status" => "notfound"]);
     exit;
 }
 
-
-// ============================================================
-//  HELPER: Download CSV from Google Sheets and parse into rows
-// ============================================================
 function fetchCSV($url) {
     $context = stream_context_create([
-        "http" => [
-            "timeout"         => 10,
-            "follow_location" => true,
-            "user_agent"      => "Mozilla/5.0"
-        ]
+        "http" => ["timeout" => 10, "follow_location" => true, "user_agent" => "Mozilla/5.0"]
     ]);
-
     $csv = @file_get_contents($url, false, $context);
-
     if ($csv === false) return [];
-
     $lines = explode("\n", trim($csv));
     if (count($lines) < 2) return [];
-
-    // First line = headers
-    $headers = str_getcsv(array_shift($lines));
-    $headers = array_map(fn($h) => strtolower(trim($h)), $headers);
-
+    array_shift($lines); // remove header row
     $rows = [];
     foreach ($lines as $line) {
         if (empty(trim($line))) continue;
-        $values = str_getcsv($line);
-        // Pad values if row has fewer columns than headers
-        while (count($values) < count($headers)) {
-            $values[] = "";
-        }
-        $rows[] = array_combine($headers, $values);
+        $rows[] = str_getcsv($line);
     }
-
     return $rows;
 }
 
+// Build a record from a dispatched row
+function buildRecord($row) {
+    $card_no  = strtoupper(trim($row[1] ?? ""));
+    $dc_code  = trim($row[2] ?? "");
+    $centre   = trim($row[3] ?? "");
+    $name     = trim($row[4] ?? "");
+    $remarks  = strtolower(trim($row[7] ?? ""));
+    $status_col = strtolower(trim($row[8] ?? ""));
 
-// ============================================================
-//  STEP 1: Search DISPATCHED DETAILS sheet
-//  Columns: sn | smart card no | dc code | centre name | full name
-// ============================================================
-$dispatched_rows = fetchCSV($SHEET_DISPATCHED);
-
-foreach ($dispatched_rows as $row) {
-    // Get values — try both possible column name formats
-    $card_in_sheet = strtolower(trim($row["smart card no"]  ?? $row["smart card no."] ?? ""));
-    $name_in_sheet = strtolower(trim($row["full name"]      ?? ""));
-
-    $card_match = !empty($search_card) && $card_in_sheet === $search_card;
-    $name_match = !empty($search_name) && $name_in_sheet === $search_name;
-
-    if ($card_match || $name_match) {
-        echo json_encode([
-            "status"      => "dispatched",
-            "name"        => trim($row["full name"]      ?? ""),
-            "card_number" => strtoupper(trim($row["smart card no"] ?? $row["smart card no."] ?? "")),
-            "dc_code"     => trim($row["dc code"]        ?? ""),
-            "centre"      => trim($row["centre name"]    ?? ""),
-        ]);
-        exit;
+    // Determine real status:
+    // Column I says "DISPATCHED" = dispatched
+    // Column I is empty but remarks say "not sent from rvk" = atrvk
+    // Otherwise = notfound in this sheet
+    if ($status_col === "dispatched") {
+        $status = "dispatched";
+    } elseif (str_contains($remarks, "not sent from rvk") || str_contains($remarks, "rvk")) {
+        $status = "atrvk";
+    } else {
+        $status = "dispatched"; // in this sheet = dispatched by default
     }
+
+    return [
+        "status"      => $status,
+        "name"        => $name,
+        "card_number" => $card_no,
+        "dc_code"     => $dc_code,
+        "centre"      => $centre,
+    ];
 }
 
-
-// ============================================================
-//  STEP 2: Search AT RKV sheet (card numbers only)
-//  Only possible to search by card number here
-// ============================================================
+// ── SEARCH BY CARD NUMBER ────────────────────────────────────
 if (!empty($search_card)) {
-    $atrvk_rows = fetchCSV($SHEET_ATRVK);
 
-    foreach ($atrvk_rows as $row) {
-        // Card number is in first column — get it regardless of header name
-        $card_in_sheet = strtolower(trim(array_values($row)[0] ?? ""));
-
+    // Check DISPATCHED DETAILS
+    foreach (fetchCSV($SHEET_DISPATCHED) as $row) {
+        $card_in_sheet = strtolower(trim($row[1] ?? ""));
         if ($card_in_sheet === $search_card) {
-            echo json_encode([
-                "status"      => "atrvk",
-                "card_number" => strtoupper($search_card),
-            ]);
+            echo json_encode(buildRecord($row));
             exit;
         }
     }
-}
 
-
-// ============================================================
-//  STEP 3: Search IN PRINTING sheet (card numbers only)
-// ============================================================
-if (!empty($search_card)) {
-    $printing_rows = fetchCSV($SHEET_PRINTING);
-
-    foreach ($printing_rows as $row) {
-        $card_in_sheet = strtolower(trim(array_values($row)[0] ?? ""));
-
+    // Check AT RKV sheet
+    foreach (fetchCSV($SHEET_ATRVK) as $row) {
+        $card_in_sheet = strtolower(trim($row[0] ?? ""));
         if ($card_in_sheet === $search_card) {
-            echo json_encode([
-                "status"      => "printing",
-                "card_number" => strtoupper($search_card),
-            ]);
+            echo json_encode(["status" => "atrvk", "card_number" => strtoupper($search_card)]);
             exit;
         }
     }
+
+    // Check IN PRINTING sheet
+    foreach (fetchCSV($SHEET_PRINTING) as $row) {
+        $card_in_sheet = strtolower(trim($row[0] ?? ""));
+        if ($card_in_sheet === $search_card) {
+            echo json_encode(["status" => "printing", "card_number" => strtoupper($search_card)]);
+            exit;
+        }
+    }
+
+    echo json_encode(["status" => "notfound"]);
+    exit;
 }
 
+// ── SEARCH BY NAME + optional CENTRE ────────────────────────
+if (!empty($search_name)) {
+    $matches = [];
 
-// ============================================================
-//  STEP 4: Nothing found anywhere
-// ============================================================
+    foreach (fetchCSV($SHEET_DISPATCHED) as $row) {
+        $name_in_sheet   = strtolower(trim($row[4] ?? ""));
+        $centre_in_sheet = strtolower(trim($row[3] ?? ""));
+
+        $name_match   = $name_in_sheet === $search_name;
+        $centre_match = empty($search_centre) || str_contains($centre_in_sheet, $search_centre);
+
+        if ($name_match && $centre_match) {
+            $matches[] = buildRecord($row);
+        }
+    }
+
+    if (count($matches) === 0) {
+        echo json_encode(["status" => "notfound"]);
+    } elseif (count($matches) === 1) {
+        echo json_encode($matches[0]);
+    } else {
+        echo json_encode(["multiple" => true, "results" => $matches]);
+    }
+    exit;
+}
+
 echo json_encode(["status" => "notfound"]);
 ?>

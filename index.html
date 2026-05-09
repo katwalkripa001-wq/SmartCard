@@ -3,74 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Card Management System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind:wght@400;500&display=swap" rel="stylesheet" />
+  <title>Smart Card Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
   <!-- HEADER -->
   <header>
-    <img src="logo.png" alt="Logo" class="logo" />
-    <div class="header-title">
-      <h1>SmartCard Status Information</h1>
-      <p>स्मार्टकार्ड प्रणाली</p>
+    <div class="header-inner">
+      <img src="logo.png" alt="TPRF Logo" class="logo" />
+      <div class="header-divider"></div>
+      <div class="header-text">
+        <h1>Smart Card Portal</h1>
+        <p>स्मार्ट कार्ड व्यवस्थापन प्रणाली</p>
+      </div>
     </div>
   </header>
 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">🇳🇵 &nbsp; Nepal Smart Card System</div>
+    <h2 class="hero-title">Track Your<br /><span class="gradient-text">Smart Card</span></h2>
+    <p class="hero-sub">Enter your details below to instantly check your smart card delivery status.</p>
+  </section>
+
   <!-- MAIN -->
   <main>
+    <div class="card" id="searchCard">
 
-    <!-- Search Card -->
-    <div class="card">
-      <h2>Search Your SmartCard Status</h2>
-      <p class="subtitle">Enter your full name or smartcard number to check your status.</p>
+      <div class="card-header">
+        <div class="card-icon">🔍</div>
+        <div>
+          <h3>Search Status</h3>
+          <p>खोज्नुहोस्</p>
+        </div>
+      </div>
 
-      <label for="nameInput">Full Name (पूरा नाम)</label>
-      <input type="text" id="nameInput" placeholder="e.g. Ram Bahadur Thapa" />
+      <!-- SEARCH MODE TABS -->
+      <div class="tab-row">
+        <button class="tab active" onclick="switchTab('name', this)">By Name + Centre</button>
+        <button class="tab" onclick="switchTab('card', this)">By Card Number</button>
+      </div>
 
-      <div class="or-divider">— OR (वा) —</div>
+      <!-- TAB 1: Name + Centre -->
+      <div id="tab-name" class="tab-content">
+        <div class="field">
+          <label for="nameInput"><span class="field-icon">👤</span> Full Name / पूरा नाम</label>
+          <input type="text" id="nameInput" placeholder="e.g. Ram Bahadur Thapa" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="centreInput"><span class="field-icon">🏢</span> Centre / केन्द्र <span class="optional">(optional — narrows results)</span></label>
+          <input type="text" id="centreInput" placeholder="e.g. Samakhusi, Kathmandu" autocomplete="off" />
+        </div>
+      </div>
 
-      <label for="cardInput">SmartCard Number (स्मार्टकार्ड नम्बर)</label>
-      <input type="text" id="cardInput" placeholder="e.g. NAB279" />
+      <!-- TAB 2: Card Number -->
+      <div id="tab-card" class="tab-content" style="display:none;">
+        <div class="field">
+          <label for="cardInput"><span class="field-icon">💳</span> Smart Card Number / स्मार्ट कार्ड नम्बर</label>
+          <input type="text" id="cardInput" placeholder="e.g. NAB279" autocomplete="off" />
+        </div>
+      </div>
 
-      <br /><br />
+      <button class="btn-search" id="searchBtn" onclick="searchCard()">
+        <span id="btnText">Search Status</span>
+        <span id="btnLoader" class="btn-loader" style="display:none;">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </span>
+      </button>
+      <button class="btn-clear" onclick="clearSearch()">Clear / मेटाउनुहोस्</button>
 
-      <button class="btn-search" id="searchBtn" onclick="searchCard()">Search (खोज्नुहोस्)</button>
-      <button class="btn-clear" onclick="clearSearch()">Clear (मेटाउनुहोस्)</button>
+      <p id="errorMsg"    class="msg-error">⚠ Please enter your name or card number.</p>
+      <p id="fullNameMsg" class="msg-warning">⚠ Please enter your full name — e.g. Ram Bahadur Thapa</p>
 
-      <!-- Error: nothing entered -->
-      <p id="errorMsg" class="msg-error">
-        ⚠ कृपया नाम वा स्मार्ट कार्ड नम्बर मध्ये कम्तिमा एउटा भर्नुहोस्।
-      </p>
-
-      <!-- Warning: only first name entered -->
-      <p id="fullNameMsg" class="msg-warning">
-        ⚠ कृपया आफ्नो पूरा नाम लेख्नुहोस् — Please enter your full name (e.g. Ram Bahadur Thapa)
-      </p>
     </div>
 
-    <!-- Result Box (shown after search) -->
+    <!-- MULTIPLE RESULTS BOX -->
+    <div id="multiBox" class="result-box multi-box">
+      <p class="multi-title">🔎 Multiple records found — <span id="multiCount"></span></p>
+      <p class="multi-sub">Please select your record:</p>
+      <div id="multiList" class="multi-list"></div>
+    </div>
+
+    <!-- SINGLE RESULT BOX -->
     <div id="resultBox" class="result-box">
-      <p id="statusLabel" class="status-label"></p>
+      <button id="backBtn" class="btn-back" onclick="showMulti()" style="display:none;">← Back to results</button>
+      <div class="result-icon" id="resultIcon"></div>
+      <p id="statusLabel"   class="status-label"></p>
       <p id="statusMessage" class="status-message"></p>
 
-      <!-- Details table (shown only when dispatched) -->
       <div id="cardDetails" class="card-details">
-        <table>
-          <tr><th>Full Name / नाम</th>          <td id="detailName"></td></tr>
-          <tr><th>Card Number</th>               <td id="detailCard"></td></tr>
-          <tr><th>DC Code / केन्द्र कोड</th>    <td id="detailDcCode"></td></tr>
-          <tr><th>Centre / केन्द्र</th>          <td id="detailCentre"></td></tr>
-        </table>
+        <div class="detail-row">
+          <span class="detail-key">नाम / Name</span>
+          <span class="detail-val" id="detailName"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Card Number</span>
+          <span class="detail-val" id="detailCard"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">DC Code</span>
+          <span class="detail-val" id="detailDcCode"></span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-key">Centre / केन्द्र</span>
+          <span class="detail-val" id="detailCentre"></span>
+        </div>
       </div>
     </div>
 
   </main>
 
-  <!-- FOOTER -->
   <footer>
-    <p>नेपाल सरकार &nbsp;|&nbsp; Government of Nepal</p>
+    <p>नेपाल सरकार &nbsp;·&nbsp; Government of Nepal &nbsp;·&nbsp; Smart Card Portal</p>
   </footer>
 
   <script src="script.js"></script>

@@ -1,398 +1,589 @@
 /* ============================================================
-   SMART CARD MANAGEMENT SYSTEM — style.css
-   ============================================================
-   SECTIONS:
-   1.  Reset & Base
-   2.  Header
-   3.  Main Layout
-   4.  Search Card
-   5.  Labels & Inputs
-   6.  OR Divider
-   7.  Buttons
-   8.  Error & Warning Messages
-   9.  Result Box
-   10. Status Colors
-   11. Details Table
-   12. Footer
-   13. Responsive (mobile)
+   SMART CARD PORTAL — Light Theme
+   Clean white + navy blue + gold
    ============================================================ */
 
+/* --- VARIABLES --- */
+:root {
+  --navy:       #0a2a6e;
+  --navy-dark:  #050d1f;
+  --blue:       #1a4db3;
+  --blue-light: #e8f0fe;
+  --gold:       #c8922a;
+  --white:      #ffffff;
+  --gray-bg:    #f0f4f8;
+  --gray-border:#e2e8f0;
+  --gray-text:  #4a5568;
+  --dark-text:  #1a1a2e;
 
-/* ============================================================
-   1. RESET & BASE
-   Removes default browser margin/padding. Sets the font and
-   background color for the whole page.
-   ============================================================ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  --green:      #38a169;
+  --green-bg:   #f0fff4;
+  --green-border:#c6f6d5;
+
+  --blue-soft:  #3182ce;
+  --blue-soft-bg:#ebf8ff;
+  --blue-soft-border:#bee3f8;
+
+  --amber:      #d97706;
+  --amber-bg:   #fffbeb;
+  --amber-border:#fbd38d;
+
+  --red:        #e53e3e;
+  --red-bg:     #fff5f5;
+  --red-border: #fed7d7;
+
+  --radius:     12px;
+  --radius-sm:  8px;
+  --shadow:     0 4px 20px rgba(0,0,0,0.08);
+  --shadow-sm:  0 2px 8px rgba(0,0,0,0.06);
 }
 
+/* --- RESET --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #f0f4f8;
-  color: #1a1a2e;
+  font-family: 'Sora', sans-serif;
+  background-color: var(--gray-bg);
+  color: var(--dark-text);
   min-height: 100vh;
 }
 
-
 /* ============================================================
-   2. HEADER
-   Dark navy bar at the top. Logo and title sit side by side
-   using flexbox. Gold line runs along the bottom.
+   HEADER
    ============================================================ */
 header {
-  background-color: #0a2a6e;
+  background-color: var(--navy);
   padding: 16px 40px;
-  display: flex;           /* side by side layout */
-  align-items: center;     /* vertically centered */
-  gap: 20px;               /* space between logo and title */
-  border-bottom: 4px solid #c8922a;  /* gold line */
+  border-bottom: 4px solid var(--gold);
 }
 
-header .logo {
-  height: 50px;
+.header-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.logo {
+  height: 46px;
   width: auto;
-  filter: brightness(0) invert(1);  /* turns logo white */
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
 }
 
-.header-title h1 {
-  font-size: 1.3rem;
+.header-divider {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+}
+
+.header-text h1 {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
-  line-height: 1.2;
+  color: var(--white);
+  letter-spacing: -0.01em;
 }
 
-.header-title p {
-  font-family: 'Hind', sans-serif;  /* Nepali text font */
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.75);
-  margin-top: 3px;
+.header-text p {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7);
+  margin-top: 2px;
 }
-
 
 /* ============================================================
-   3. MAIN LAYOUT
-   Centers everything on the page with a max width of 580px.
-   The search card and result box stack vertically.
+   HERO
+   ============================================================ */
+.hero {
+  text-align: center;
+  padding: 50px 20px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: var(--blue-light);
+  border: 1px solid #c3d4f7;
+  border-radius: 100px;
+  padding: 5px 16px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--blue);
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--dark-text);
+  margin-bottom: 14px;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 0.95rem;
+  color: var(--gray-text);
+  line-height: 1.6;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   MAIN LAYOUT
    ============================================================ */
 main {
-  max-width: 580px;
-  margin: 40px auto;
+  max-width: 560px;
+  margin: 32px auto 60px;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
-
 /* ============================================================
-   4. SEARCH CARD
-   White rounded box that contains the entire search form.
+   SEARCH CARD
    ============================================================ */
 .card {
-  background-color: #ffffff;
-  border-radius: 12px;
+  background: var(--white);
+  border-radius: var(--radius);
   padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+  animation: fadeUp 0.7s ease 0.1s both;
 }
 
-.card h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #0a2a6e;
-  margin-bottom: 6px;
-}
-
-.card .subtitle {
-  font-size: 0.88rem;
-  color: #718096;
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--gray-border);
 }
 
+.card-icon {
+  width: 44px;
+  height: 44px;
+  background: var(--blue-light);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.card-header p {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  font-size: 0.8rem;
+  color: var(--gray-text);
+  margin-top: 2px;
+}
 
 /* ============================================================
-   5. LABELS & INPUTS
-   Labels sit above each input. Inputs highlight blue on focus.
+   TABS
    ============================================================ */
-label {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #4a5568;
-  margin-bottom: 7px;
+.tab-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 22px;
+  background: var(--gray-bg);
+  border-radius: 10px;
+  padding: 4px;
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1.5px solid #cbd5e0;
+.tab {
+  flex: 1;
+  padding: 9px;
+  background: transparent;
+  border: none;
   border-radius: 8px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.95rem;
-  color: #1a1a2e;
-  background-color: #f7fafc;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--gray-text);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
-input[type="text"]:focus {
-  outline: none;
-  border-color: #0a2a6e;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(10, 42, 110, 0.1);
+.tab.active {
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
 }
-
 
 /* ============================================================
-   6. OR DIVIDER
-   The "— OR / वा —" text between the two inputs.
+   FIELDS & INPUTS
    ============================================================ */
-.or-divider {
-  text-align: center;
-  color: #a0aec0;
-  font-size: 0.82rem;
-  margin: 16px 0;
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-text);
+  margin-bottom: 8px;
+  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+.field-icon { font-size: 0.85rem; }
 
-/* ============================================================
-   7. BUTTONS
-   Search button = filled dark blue.
-   Clear button  = outlined/transparent.
-   ============================================================ */
-.btn-search {
-  display: block;
-  width: 100%;
-  padding: 13px;
-  background-color: #0a2a6e;
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: background-color 0.2s, transform 0.1s;
+.optional {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #a0aec0;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
-.btn-search:hover    { background-color: #0d3490; }
-.btn-search:active   { transform: scale(0.98); }
-.btn-search:disabled { background-color: #718096; cursor: not-allowed; }
+.field input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
+  color: var(--dark-text);
+  background: var(--gray-bg);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.field input::placeholder { color: #a0aec0; }
+
+.field input:focus {
+  border-color: var(--blue);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(26, 77, 179, 0.1);
+}
+
+/* ============================================================
+   OR DIVIDER
+   ============================================================ */
+.or-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 18px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #a0aec0;
+  letter-spacing: 0.06em;
+}
+
+.or-line { flex: 1; height: 1px; background: var(--gray-border); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 13px;
+  background-color: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+  min-height: 50px;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(10,42,110,0.25);
+}
+
+.btn-search:hover {
+  background: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(10,42,110,0.3);
+}
+
+.btn-search:active   { transform: translateY(0); }
+.btn-search:disabled { background: #a0aec0; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Loading dots */
+.btn-loader { display: flex; gap: 5px; align-items: center; }
+.dot {
+  width: 7px; height: 7px;
+  background: white;
+  border-radius: 50%;
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40%            { transform: scale(1);   opacity: 1; }
+}
 
 .btn-clear {
   display: block;
   width: 100%;
   padding: 11px;
-  background-color: transparent;
-  color: #4a5568;
-  border: 1.5px solid #cbd5e0;
-  border-radius: 8px;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.92rem;
+  background: transparent;
+  color: var(--gray-text);
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: background 0.2s, border-color 0.2s;
 }
 
 .btn-clear:hover {
-  background-color: #f0f4f8;
+  background: var(--gray-bg);
   border-color: #a0aec0;
 }
 
-
 /* ============================================================
-   8. ERROR & WARNING MESSAGES
-   msg-error   = red  — shown when both fields are empty
-   msg-warning = amber — shown when only first name is typed
-   Both are hidden by default. JavaScript shows them.
+   ERROR & WARNING
    ============================================================ */
-.msg-error,
-.msg-warning {
+.msg-error, .msg-warning {
   display: none;
   margin-top: 14px;
   padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 0.88rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.86rem;
   line-height: 1.6;
+  border-left: 4px solid;
 }
 
 .msg-error {
-  background-color: #fff5f5;
-  border: 1px solid #feb2b2;
-  border-left: 4px solid #e53e3e;
+  background: var(--red-bg);
+  border-color: var(--red);
   color: #c53030;
 }
 
 .msg-warning {
-  background-color: #fffbeb;
-  border: 1px solid #fbd38d;
-  border-left: 4px solid #d97706;
+  background: var(--amber-bg);
+  border-color: var(--amber);
   color: #744210;
 }
 
-
 /* ============================================================
-   9. RESULT BOX
-   Hidden by default. JavaScript shows it and adds a status
-   class (status-dispatched, status-atrvk, status-printing,
-   status-notfound) which changes its color.
+   RESULT BOX
    ============================================================ */
 .result-box {
   display: none;
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 28px 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e2e8f0;
-  border-left: 6px solid #cbd5e0;  /* left border color changes by status */
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--gray-border);
+  border-left: 5px solid var(--gray-border);
+  animation: fadeUp 0.35s ease both;
+}
+
+.result-icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  display: block;
+  animation: iconPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes iconPop {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 .status-label {
-  font-size: 0.78rem;
-  font-weight: 600;
+  display: inline-block;
+  font-size: 0.73rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 10px;
+  letter-spacing: 0.09em;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1.5px solid currentColor;
 }
 
 .status-message {
-  font-family: 'Hind', sans-serif;
+  font-family: 'Noto Sans Devanagari', sans-serif;
   font-size: 1.05rem;
+  line-height: 1.85;
   font-weight: 500;
-  line-height: 1.9;
 }
 
+/* Status Colors */
+.result-box.status-dispatched { background: var(--green-bg);      border-left-color: var(--green);     border-top-color: var(--green-border);    border-right-color: var(--green-border);    border-bottom-color: var(--green-border); }
+.result-box.status-atrvk      { background: var(--blue-soft-bg);  border-left-color: var(--blue-soft); border-top-color: var(--blue-soft-border); border-right-color: var(--blue-soft-border); border-bottom-color: var(--blue-soft-border); }
+.result-box.status-printing   { background: var(--amber-bg);      border-left-color: var(--amber);     border-top-color: var(--amber-border);    border-right-color: var(--amber-border);    border-bottom-color: var(--amber-border); }
+.result-box.status-notfound   { background: var(--red-bg);        border-left-color: var(--red);       border-top-color: var(--red-border);      border-right-color: var(--red-border);      border-bottom-color: var(--red-border); }
 
-/* ============================================================
-   10. STATUS COLORS
-   Each status gets a different background and border color.
-   The label and message text colors also change.
-   ============================================================ */
+.result-box.status-dispatched .status-label   { color: var(--green); }
+.result-box.status-atrvk      .status-label   { color: var(--blue-soft); }
+.result-box.status-printing   .status-label   { color: var(--amber); }
+.result-box.status-notfound   .status-label   { color: var(--red); }
 
-/* DISPATCHED — green */
-.result-box.status-dispatched {
-  background-color: #f0fff4;
-  border-left-color: #38a169;
-}
-.result-box.status-dispatched .status-label   { color: #276749; }
 .result-box.status-dispatched .status-message { color: #22543d; }
-
-/* AT RVK (at vendor) — blue */
-.result-box.status-atrvk {
-  background-color: #ebf8ff;
-  border-left-color: #3182ce;
-}
-.result-box.status-atrvk .status-label   { color: #2b6cb0; }
-.result-box.status-atrvk .status-message { color: #2c5282; }
-
-/* IN PRINTING — amber */
-.result-box.status-printing {
-  background-color: #fffbeb;
-  border-left-color: #d97706;
-}
-.result-box.status-printing .status-label   { color: #b7791f; }
-.result-box.status-printing .status-message { color: #744210; }
-
-/* NOT FOUND — red */
-.result-box.status-notfound {
-  background-color: #fff5f5;
-  border-left-color: #e53e3e;
-}
-.result-box.status-notfound .status-label   { color: #c53030; }
-.result-box.status-notfound .status-message { color: #742a2a; }
-
+.result-box.status-atrvk      .status-message { color: #2c5282; }
+.result-box.status-printing   .status-message { color: #744210; }
+.result-box.status-notfound   .status-message { color: #742a2a; }
 
 /* ============================================================
-   11. DETAILS TABLE
-   Shows name, card number, DC code and centre when a
-   dispatched record is found. Hidden by default.
+   DETAILS TABLE
    ============================================================ */
 .card-details {
   display: none;
+  flex-direction: column;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(0,0,0,0.07);
+  gap: 0;
 }
 
-.card-details table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  gap: 12px;
 }
 
-.card-details tr {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
+.detail-row:last-child { border-bottom: none; }
 
-.card-details tr:last-child {
-  border-bottom: none;
-}
-
-.card-details th {
-  text-align: left;
-  padding: 9px 12px 9px 0;
-  color: #718096;
-  font-weight: 500;
-  width: 160px;
-}
-
-.card-details td {
-  padding: 9px 0;
-  color: #1a1a2e;
+.detail-key {
+  font-size: 0.78rem;
   font-weight: 600;
+  color: var(--gray-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
 }
 
+.detail-val {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--dark-text);
+  text-align: right;
+}
 
 /* ============================================================
-   12. FOOTER
-   Simple centered text at the bottom of the page.
+   MULTIPLE RESULTS
+   ============================================================ */
+.multi-box {
+  border-left-color: var(--blue-soft) !important;
+  background: var(--blue-soft-bg) !important;
+  border-color: var(--blue-soft-border) !important;
+}
+
+.multi-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--blue-soft);
+  margin-bottom: 4px;
+}
+
+.multi-sub {
+  font-size: 0.82rem;
+  color: var(--gray-text);
+  margin-bottom: 16px;
+}
+
+.multi-list { display: flex; flex-direction: column; gap: 10px; }
+
+.multi-item {
+  background: var(--white);
+  border: 1.5px solid var(--gray-border);
+  border-radius: 10px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.multi-item:hover {
+  border-color: var(--blue);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+.multi-item-name { font-size: 0.95rem; font-weight: 600; color: var(--dark-text); margin-bottom: 3px; }
+.multi-item-sub  { font-size: 0.78rem; color: var(--gray-text); }
+.multi-item-arrow { font-size: 1rem; color: var(--blue); }
+
+/* BACK BUTTON */
+.btn-back {
+  background: transparent;
+  border: 1.5px solid var(--gray-border);
+  color: var(--gray-text);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-back:hover { background: var(--gray-bg); border-color: #a0aec0; }
+
+/* ============================================================
+   FOOTER
    ============================================================ */
 footer {
   text-align: center;
   padding: 24px;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #a0aec0;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--gray-border);
   margin-top: 10px;
 }
 
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ============================================================
-   13. RESPONSIVE — MOBILE
-   On screens smaller than 480px, reduce padding and font sizes
-   so the page still looks good on a phone.
+   RESPONSIVE
    ============================================================ */
 @media (max-width: 480px) {
-  header {
-    padding: 14px 20px;
-    gap: 12px;
-  }
-
-  header .logo {
-    height: 36px;
-  }
-
-  .header-title h1 {
-    font-size: 1rem;
-  }
-
-  main {
-    margin: 20px auto;
-  }
-
-  .card {
-    padding: 22px 18px;
-  }
-
-  .result-box {
-    padding: 20px 18px;
-  }
-
-  .card-details th {
-    width: 120px;
-  }
+  header        { padding: 14px 20px; }
+  .logo         { height: 36px; }
+  .header-text h1 { font-size: 0.95rem; }
+  .hero         { padding: 32px 20px 10px; }
+  .hero-title   { font-size: 1.8rem; }
+  main          { margin: 20px auto; }
+  .card         { padding: 22px 18px; }
+  .result-box   { padding: 20px 18px; }
+  .detail-row   { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .detail-val   { text-align: left; }
 }
